@@ -9,6 +9,16 @@ sha256=1950b62ef3d851a25f68bc1ee0da41354f51cdaad34bc2f680e4508cc6631b00
 
 dir="$RUNNER_TEMP/nix-installer-patched"
 mkdir -p "$dir"
-curl --fail --silent --show-error --location --retry 3 --output "$dir/nix-installer-aarch64-darwin" "$url"
-echo "$sha256  $dir/nix-installer-aarch64-darwin" | shasum -a 256 --check --status
+curl --fail --silent --show-error --location --retry 3 --output "$dir/nix-installer-real" "$url"
+echo "$sha256  $dir/nix-installer-real" | shasum -a 256 --check --status
+chmod +x "$dir/nix-installer-real"
+
+# nix-installer-action runs the binary through sudo, which drops the caller's
+# environment, so the option is set inside the sudo boundary.
+cat > "$dir/nix-installer-aarch64-darwin" <<WRAPPER
+#!/usr/bin/env bash
+export NIX_INSTALLER_NO_TIME_MACHINE_EXCLUSIONS=true
+exec "$dir/nix-installer-real" "\$@"
+WRAPPER
+chmod +x "$dir/nix-installer-aarch64-darwin"
 echo "path=$dir" >> "$GITHUB_OUTPUT"
