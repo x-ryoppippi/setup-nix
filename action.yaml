@@ -82,10 +82,29 @@ runs:
         # services must be provisioned again rather than skipped by its receipt.
         sudo rm -f /nix/receipt.json /nix/var/nix/daemon-socket/socket
 
+    - name: Fetch the macOS installer without Time Machine exclusions
+      id: patched-installer
+      if: runner.os == 'macOS'
+      shell: bash
+      env:
+        ACTION_PATH: ${{ github.action_path }}
+      run: bash "$ACTION_PATH/scripts/fetch-patched-installer.sh"
+
     - name: Install Nix
+      if: runner.os != 'macOS'
       uses: NixOS/nix-installer-action@62c1943b776c509394b550f3f983adc14e9212d6 # v1.0.0
       with:
         installer-version: ${{ inputs.installer-version }}
+        extra-conf: ${{ inputs.extra-conf }}
+
+    - name: Install Nix without Time Machine exclusions
+      if: runner.os == 'macOS'
+      uses: NixOS/nix-installer-action@62c1943b776c509394b550f3f983adc14e9212d6 # v1.0.0
+      env:
+        NIX_INSTALLER_NO_TIME_MACHINE_EXCLUSIONS: 'true'
+      with:
+        dogfood: 'true'
+        dogfood-path: ${{ steps.patched-installer.outputs.path }}
         extra-conf: ${{ inputs.extra-conf }}
 
     - name: Prepare per-user garbage collection roots

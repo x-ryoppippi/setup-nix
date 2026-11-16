@@ -35,7 +35,7 @@ Automatic detection uses Linux plus `BLACKSMITH_STICKY_DISK_GRPC_PORT`, not runn
 | `sticky-gc-threshold` | `0` | Opt into trimming a writable sticky store above this usage percentage. `0` disables trimming. |
 | `extra-conf` | empty | Additional public Nix settings. |
 | `github-token` | `github.token` | Configure authenticated Nix GitHub fetches. Empty disables this configuration. |
-| `installer-version` | `2.35.4` | Pin the NixOS installer release. |
+| `installer-version` | `2.35.4` | Pin the NixOS installer release. macOS ignores it and uses a patched 2.35.4 build that skips the Time Machine exclusions, pending [NixOS/nix-installer#265](https://github.com/NixOS/nix-installer/pull/265). |
 
 Outputs are `backend`, `cache-writable` and `sticky-key` (the fully qualified disk key).
 
