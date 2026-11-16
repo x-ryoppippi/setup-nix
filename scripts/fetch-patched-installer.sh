@@ -13,11 +13,13 @@ curl --fail --silent --show-error --location --retry 3 --output "$dir/nix-instal
 echo "$sha256  $dir/nix-installer-real" | shasum -a 256 --check --status
 chmod +x "$dir/nix-installer-real"
 
-# nix-installer-action runs the binary through sudo, which drops the caller's
-# environment, so the option is set inside the sudo boundary.
+# nix-installer-action runs `install` without a planner, and only the macOS
+# planner accepts the option, so the wrapper selects it explicitly.
 cat > "$dir/nix-installer-aarch64-darwin" <<WRAPPER
 #!/usr/bin/env bash
-export NIX_INSTALLER_NO_TIME_MACHINE_EXCLUSIONS=true
+if [ "\${1:-}" = install ] && [ "\${2:-}" != macos ]; then
+  exec "$dir/nix-installer-real" install macos --no-time-machine-exclusions "\${@:2}"
+fi
 exec "$dir/nix-installer-real" "\$@"
 WRAPPER
 chmod +x "$dir/nix-installer-aarch64-darwin"
