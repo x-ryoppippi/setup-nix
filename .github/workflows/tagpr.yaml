@@ -24,6 +24,11 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
+      # tagpr's install.sh fetches its binary with one plain curl, and the
+      # release CDN answers transient 504s; curl reads this file because
+      # the script does not pass -q.
+      - name: Retry transient download failures
+        run: printf 'retry = 5\n' > "$HOME/.curlrc"
       - uses: Songmu/tagpr@047aec4b6c0ce166f52958b5a97f5a3d927fd65b # v1.22.0
         env:
           GITHUB_TOKEN: ${{ github.token }}
