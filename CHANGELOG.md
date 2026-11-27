@@ -1,5 +1,10 @@
 # Changelog
 
+## [v0.0.8](https://github.com/x-ryoppippi/setup-nix/compare/v0.0.7...v0.0.8) - 2026-11-27
+
+### Changes
+- fix(hestia): log which upload or merge loses cache locations by @ryoppippi in https://github.com/x-ryoppippi/setup-nix/pull/16
+
 ## [v0.0.7](https://github.com/x-ryoppippi/setup-nix/compare/v0.0.6...v0.0.7) - 2026-11-27
 
 ### Changes
