@@ -1,5 +1,10 @@
 # Changelog
 
+## [v0.0.5](https://github.com/x-ryoppippi/setup-nix/compare/v0.0.4...v0.0.5) - 2026-11-27
+
+### Changes
+- fix(hestia): stop concurrent jobs restoring dead cache entries and refetching the binary by @ryoppippi in https://github.com/x-ryoppippi/setup-nix/pull/8
+
 ## [v0.0.4](https://github.com/x-ryoppippi/setup-nix/compare/v0.0.3...v0.0.4) - 2026-11-27
 
 ### Changes
