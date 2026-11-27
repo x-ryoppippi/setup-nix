@@ -1,5 +1,10 @@
 # Changelog
 
+## [v0.0.4](https://github.com/x-ryoppippi/setup-nix/compare/v0.0.3...v0.0.4) - 2026-11-27
+
+### Changes
+- perf(macos): cut Nix setup from 30 s to 4 s on macOS runners by @ryoppippi in https://github.com/x-ryoppippi/setup-nix/pull/6
+
 ## [v0.0.3](https://github.com/x-ryoppippi/setup-nix/compare/v0.0.2...v0.0.3) - 2026-11-27
 
 ### Changes
