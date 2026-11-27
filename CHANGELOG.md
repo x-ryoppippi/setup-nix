@@ -1,5 +1,10 @@
 # Changelog
 
+## [v0.0.9](https://github.com/x-ryoppippi/setup-nix/compare/v0.0.8...v0.0.9) - 2026-11-27
+
+### Changes
+- fix(hestia): stop re-pushed paths depending on dead cache packs by @ryoppippi in https://github.com/x-ryoppippi/setup-nix/pull/18
+
 ## [v0.0.8](https://github.com/x-ryoppippi/setup-nix/compare/v0.0.7...v0.0.8) - 2026-11-27
 
 ### Changes
