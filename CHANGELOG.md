@@ -1,5 +1,10 @@
 # Changelog
 
+## [v0.0.7](https://github.com/x-ryoppippi/setup-nix/compare/v0.0.6...v0.0.7) - 2026-11-27
+
+### Changes
+- fix(hestia): stop committing packs the cache acknowledged but never served by @ryoppippi in https://github.com/x-ryoppippi/setup-nix/pull/12
+
 ## [v0.0.6](https://github.com/x-ryoppippi/setup-nix/compare/v0.0.5...v0.0.6) - 2026-11-27
 
 ### Changes
