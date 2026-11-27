@@ -1,6 +1,6 @@
 # setup-nix
 
-Install Nix and select a persistent cache for GitHub Actions. The action uses the NixOS installer and Hestia, with Blacksmith sticky disks on supported Linux runners. Setup uses Bash and the runner-provided Node 24 runtime. No additional script runtime is downloaded.
+Install Nix and select a persistent cache for GitHub Actions. The action uses the NixOS installer on Linux, a prebuilt Nix store from [nix-quick-install-action](https://github.com/nixbuild/nix-quick-install-action) on macOS, and Hestia, with Blacksmith sticky disks on supported Linux runners. Setup uses Bash and the runner-provided Node 24 runtime. No additional script runtime is downloaded.
 
 ```yaml
 permissions:
@@ -22,7 +22,7 @@ Pin the action to a reviewed commit. On GitHub's cache service, `actions: read` 
 | Blacksmith Linux with sticky disk support | Sticky `/nix` | Optional local store trimming |
 | Blacksmith macOS | Hestia | Blacksmith cache eviction |
 
-Automatic detection uses Linux plus `BLACKSMITH_STICKY_DISK_GRPC_PORT`, not runner names. The pinned installer supports Linux x64/ARM64 and macOS ARM64. Intel macOS and Windows are unsupported.
+Automatic detection uses Linux plus `BLACKSMITH_STICKY_DISK_GRPC_PORT`, not runner names. Linux x64/ARM64 and macOS ARM64 are supported. Intel macOS and Windows are unsupported.
 
 ## Configuration
 
@@ -35,13 +35,17 @@ Automatic detection uses Linux plus `BLACKSMITH_STICKY_DISK_GRPC_PORT`, not runn
 | `sticky-gc-threshold` | `0` | Opt into trimming a writable sticky store above this usage percentage. `0` disables trimming. |
 | `extra-conf` | empty | Additional public Nix settings. |
 | `github-token` | `github.token` | Configure authenticated Nix GitHub fetches. Empty disables this configuration. |
-| `installer-version` | `2.35.4` | Pin the NixOS installer release. macOS ignores it and uses a patched 2.35.4 build that skips the Time Machine exclusions, pending [NixOS/nix-installer#265](https://github.com/NixOS/nix-installer/pull/265). |
+| `installer-version` | `2.35.4` | Pin the NixOS installer release on Linux. macOS ignores it and installs the Nix version pinned in `action.yaml`. |
 
 Outputs are `backend`, `cache-writable` and `sticky-key` (the fully qualified disk key).
 
-The installer already sets `max-jobs = auto`. No extra build or transfer concurrency settings are needed by default.
+Both platforms set `max-jobs = auto`. No extra build or transfer concurrency settings are needed by default.
 
-The installer logs its `extra-conf` input. Pass credentials through `github-token`, which this action reads from the environment and writes silently into a private user configuration file. Access-token settings in `extra-conf` are rejected.
+The Linux installer logs its `extra-conf` input. Pass credentials through `github-token`, which this action reads from the environment and writes silently into a private user configuration file. Access-token settings in `extra-conf` are rejected.
+
+## macOS
+
+macOS installs a single-user Nix owned by the runner user: no daemon, build users or launchd services. The user configuration repeats the Linux installer's defaults, including Nix's default of no build sandbox on macOS, and leaves `accept-flake-config` disabled.
 
 ## Sticky disks
 
