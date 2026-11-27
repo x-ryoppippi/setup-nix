@@ -1,5 +1,10 @@
 # Changelog
 
+## [v0.0.6](https://github.com/x-ryoppippi/setup-nix/compare/v0.0.5...v0.0.6) - 2026-11-27
+
+### Changes
+- fix(cache): stop non-default branches filling the cache quota with copies nothing reads by @ryoppippi in https://github.com/x-ryoppippi/setup-nix/pull/10
+
 ## [v0.0.5](https://github.com/x-ryoppippi/setup-nix/compare/v0.0.4...v0.0.5) - 2026-11-27
 
 ### Changes
