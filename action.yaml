@@ -131,11 +131,11 @@ runs:
 
     - name: Start Hestia binary cache
       if: steps.prepare.outputs.backend == 'hestia'
-      uses: Mic92/hestia@dfed9ced335d28978ba74e513939a10db1f71025 # v3.1.0
+      uses: x-ryoppippi/hestia@5b588bfed2708683be160bc2dcf264452532ba1d # v3.1.0-x1
       env:
         GITHUB_TOKEN: ''
       with:
-        version: v3.1.0
+        version: v3.1.0-x1
         # GitHub's REST inventory cannot describe a runner's separate cache proxy.
         github-token: ${{ steps.cache-service.outputs.github-cache == 'true' && github.token || '' }}
         read-only: ${{ steps.prepare.outputs.writable != 'true' }}

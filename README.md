@@ -13,7 +13,7 @@ steps:
   - run: nix flake check
 ```
 
-Pin the action to a reviewed commit. On GitHub's cache service, `actions: read` lets Hestia detect evicted cache packs upfront; the cache itself uses the runner's cache token. Separate runtime cache proxies use Hestia's lazy pack lookup because GitHub's REST inventory cannot describe their contents.
+Pin the action to a reviewed commit. On GitHub's cache service, `actions: read` lets Hestia detect evicted cache packs upfront; the cache itself uses the runner's cache token. Separate runtime cache proxies use Hestia's lazy pack lookup because GitHub's REST inventory cannot describe their contents. Hestia runs from the [x-ryoppippi/hestia](https://github.com/x-ryoppippi/hestia) fork, whose releases carry its own build attestations, until [Mic92/hestia#196](https://github.com/Mic92/hestia/issues/196) is fixed upstream.
 
 | Runner | Automatic backend | Garbage collection |
 |---|---|---|
