@@ -49,7 +49,7 @@ macOS installs a single-user Nix owned by the runner user: no daemon, build user
 
 ## Sticky disks
 
-Sticky snapshots commit only on the default branch, excluding pull-request events, and only when `save` permits it. Other runs consume a snapshot without committing their changes. Hestia writes are branch-scoped; `pull_request_target` remains read-only.
+Both backends write only on the default branch, excluding pull-request events, and only when `save` permits it. Other runs read the default branch's cache without writing: a sticky snapshot is not committed, and Hestia runs read-only. Other refs could only write to their own cache scope, which nothing else reads, so those writes would only consume the cache quota.
 
 The disk key includes an installer-version and configuration suffix. Existing single-user Nix caches therefore remain untouched when migrating to this multi-user installer. Installer or public configuration changes select a fresh disk, which must warm again. A `sticky-key` override changes the base, not this suffix.
 

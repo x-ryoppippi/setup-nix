@@ -43,13 +43,12 @@ if [[ "$backend" == sticky && "$sticky_available" != true ]]; then
   exit 1
 fi
 
+# Other refs can read the default branch's cache but write only to their own
+# scope, which nothing else reads: those writes only consume the quota.
 writable=false
-if [[ "$SAVE" == true && "$EVENT_NAME" != pull_request_target ]]; then
-  if [[ "$backend" == hestia ]]; then
-    writable=true
-  elif [[ "$backend" == sticky && -n "$DEFAULT_BRANCH" && "$CURRENT_REF" == "refs/heads/$DEFAULT_BRANCH" && "$EVENT_NAME" != pull_request ]]; then
-    writable=true
-  fi
+if [[ "$SAVE" == true && -n "$DEFAULT_BRANCH" && "$CURRENT_REF" == "refs/heads/$DEFAULT_BRANCH" \
+  && "$EVENT_NAME" != pull_request && "$EVENT_NAME" != pull_request_target ]]; then
+  writable=true
 fi
 
 key=''
