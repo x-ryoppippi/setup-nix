@@ -82,14 +82,6 @@ runs:
         # services must be provisioned again rather than skipped by its receipt.
         sudo rm -f /nix/receipt.json /nix/var/nix/daemon-socket/socket
 
-    - name: Fetch the macOS installer without Time Machine exclusions
-      id: patched-installer
-      if: runner.os == 'macOS'
-      shell: bash
-      env:
-        ACTION_PATH: ${{ github.action_path }}
-      run: bash "$ACTION_PATH/scripts/fetch-patched-installer.sh"
-
     - name: Install Nix
       if: runner.os != 'macOS'
       uses: NixOS/nix-installer-action@62c1943b776c509394b550f3f983adc14e9212d6 # v1.0.0
@@ -97,13 +89,20 @@ runs:
         installer-version: ${{ inputs.installer-version }}
         extra-conf: ${{ inputs.extra-conf }}
 
-    - name: Install Nix without Time Machine exclusions
+    - name: Install Nix from a prebuilt store
       if: runner.os == 'macOS'
-      uses: NixOS/nix-installer-action@62c1943b776c509394b550f3f983adc14e9212d6 # v1.0.0
+      uses: nixbuild/nix-quick-install-action@e0ea8f6061c766e5c1d927cea8be769a1c5108a9 # v36
       with:
-        dogfood: 'true'
-        dogfood-path: ${{ steps.patched-installer.outputs.path }}
-        extra-conf: ${{ inputs.extra-conf }}
+        nix_version: 2.35.6
+        github_access_token: ''
+
+    - name: Configure Nix like the installer
+      if: runner.os == 'macOS'
+      shell: bash
+      env:
+        ACTION_PATH: ${{ github.action_path }}
+        EXTRA_CONF: ${{ inputs.extra-conf }}
+      run: bash "$ACTION_PATH/scripts/configure-macos.sh"
 
     - name: Prepare per-user garbage collection roots
       shell: bash
