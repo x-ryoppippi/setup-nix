@@ -136,15 +136,15 @@ runs:
       uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
       with:
         path: ${{ runner.temp }}/setup-nix-hestia-binary
-        key: setup-nix-hestia-binary-x-ryoppippi-hestia-v3.1.0-x5-${{ runner.os }}-${{ runner.arch }}
+        key: setup-nix-hestia-binary-x-ryoppippi-hestia-v3.1.0-x6-${{ runner.os }}-${{ runner.arch }}
 
     - name: Start Hestia binary cache
       if: steps.prepare.outputs.backend == 'hestia'
-      uses: x-ryoppippi/hestia@6f981d5ac27fb134188577d441ea44c0a1f2d050 # v3.1.0-x5
+      uses: x-ryoppippi/hestia@7c4b2995221adae5d0636236457d72412fd2b7ae # v3.1.0-x6
       env:
         GITHUB_TOKEN: ''
       with:
-        version: v3.1.0-x5
+        version: v3.1.0-x6
         binary-cache-dir: ${{ runner.temp }}/setup-nix-hestia-binary
         # GitHub's REST inventory cannot describe a runner's separate cache proxy.
         github-token: ${{ steps.cache-service.outputs.github-cache == 'true' && github.token || '' }}
