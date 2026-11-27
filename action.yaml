@@ -128,16 +128,34 @@ runs:
       if: steps.prepare.outputs.backend == 'hestia'
       uses: $/internal/cache-service
 
+    # The key names the exact release; Hestia verifies a restored binary
+    # against its build attestation exactly as it verifies a download.
+    - name: Restore the Hestia binary
+      id: hestia-binary
+      if: steps.prepare.outputs.backend == 'hestia'
+      uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: ${{ runner.temp }}/setup-nix-hestia-binary
+        key: setup-nix-hestia-binary-x-ryoppippi-hestia-v3.1.0-x2-${{ runner.os }}-${{ runner.arch }}
+
     - name: Start Hestia binary cache
       if: steps.prepare.outputs.backend == 'hestia'
-      uses: x-ryoppippi/hestia@5b588bfed2708683be160bc2dcf264452532ba1d # v3.1.0-x1
+      uses: x-ryoppippi/hestia@52d973d2cc564879d79c501e3c669eacd3e6d5dd # v3.1.0-x2
       env:
         GITHUB_TOKEN: ''
       with:
-        version: v3.1.0-x1
+        version: v3.1.0-x2
+        binary-cache-dir: ${{ runner.temp }}/setup-nix-hestia-binary
         # GitHub's REST inventory cannot describe a runner's separate cache proxy.
         github-token: ${{ steps.cache-service.outputs.github-cache == 'true' && github.token || '' }}
         read-only: ${{ steps.prepare.outputs.writable != 'true' }}
+
+    - name: Save the verified Hestia binary
+      if: steps.prepare.outputs.backend == 'hestia' && steps.hestia-binary.outputs.cache-hit != 'true' && steps.prepare.outputs.writable == 'true'
+      uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: ${{ runner.temp }}/setup-nix-hestia-binary
+        key: ${{ steps.hestia-binary.outputs.cache-primary-key }}
 
     - name: Maintain sticky store
       if: steps.prepare.outputs.backend == 'sticky'
