@@ -11,5 +11,8 @@ mkdir -p "$config_dir"
   echo 'always-allow-substitutes = true'
   echo 'max-jobs = auto'
   echo 'extra-nix-path = nixpkgs=flake:nixpkgs'
-  printf '%s\n' "$EXTRA_CONF"
+  # The installer renames experimental-features so extra-conf adds features
+  # instead of dropping nix-command and flakes.
+  printf '%s\n' "$EXTRA_CONF" \
+    | sed -E 's/^([[:space:]]*)experimental-features([[:space:]]*=)/\1extra-experimental-features\2/'
 } > "$config_dir/nix.conf"
