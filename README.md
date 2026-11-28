@@ -88,6 +88,15 @@ CI runs real installation and build jobs on GitHub and Blacksmith Linux/macOS ru
 
 tagpr maintains release pull requests and creates tags after they merge. Versions live in Git tags, without a separate version file.
 
+## Branch rules
+
+`main` requires CI's `gate` job, which passes only when every other CI job succeeded or was skipped, so auto-merge waits for the whole matrix. tagpr opens release pull requests with `GITHUB_TOKEN`, whose pushes start no workflows, so a release pull request never gets `gate`: repository admins may bypass the rule on a pull request and merge it by hand. The rules live in `.github/rulesets/main.json`, the body the rulesets API takes; the live ruleset of the same name is its copy. Change the file, then, with admin access to the repository:
+
+```sh
+nix shell nixpkgs#nushell --command nu scripts/ruleset.nu diff   # show how the live ruleset differs
+nix shell nixpkgs#nushell --command nu scripts/ruleset.nu apply  # create or update it to match
+```
+
 ## Licence
 
 MIT.

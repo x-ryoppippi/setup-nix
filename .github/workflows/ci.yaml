@@ -110,3 +110,23 @@ jobs:
     uses: ./.github/workflows/gc.yaml
     with:
       dry-run: true
+
+  # The one check the main ruleset requires. `always()` makes it report even when a job
+  # it needs fails, and a skipped job (restore off main) is not a failure.
+  gate:
+    needs: [seed, restore, no-init, gc-dry-run]
+    if: always()
+    runs-on: ubuntu-slim
+    timeout-minutes: 5
+    steps:
+      - name: Fail if any job failed or was cancelled
+        env:
+          RESULTS: ${{ join(needs.*.result, ' ') }}
+        run: |
+          echo "$RESULTS"
+          for result in $RESULTS; do
+            case "$result" in
+              success | skipped) ;;
+              *) exit 1 ;;
+            esac
+          done
