@@ -16,6 +16,7 @@ jobs:
     runs-on: ubuntu-slim
     timeout-minutes: 15
     permissions:
+      actions: write
       contents: write
       pull-requests: write
       issues: read
@@ -29,6 +30,16 @@ jobs:
       # the script does not pass -q.
       - name: Retry transient download failures
         run: printf 'retry = 5\n' > "$HOME/.curlrc"
-      - uses: Songmu/tagpr@047aec4b6c0ce166f52958b5a97f5a3d927fd65b # v1.22.0
+      - id: tagpr
+        uses: Songmu/tagpr@047aec4b6c0ce166f52958b5a97f5a3d927fd65b # v1.22.0
         env:
           GITHUB_TOKEN: ${{ github.token }}
+      # Pushes made with GITHUB_TOKEN start no workflows, so the release PR would never get
+      # the check the main ruleset requires; workflow_dispatch is the event that token can start.
+      - name: Run CI on the release pull request
+        if: steps.tagpr.outputs.pull_request != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          BRANCH: ${{ fromJSON(steps.tagpr.outputs.pull_request).head.ref }}
+        run: gh workflow run ci.yaml --ref "$BRANCH"
