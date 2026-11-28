@@ -1,5 +1,10 @@
 # Changelog
 
+## [v0.0.10](https://github.com/x-ryoppippi/setup-nix/compare/v0.0.9...v0.0.10) - 2026-11-28
+
+### Changes
+- ci: make auto-merge wait for the whole CI matrix by @ryoppippi in https://github.com/x-ryoppippi/setup-nix/pull/20
+
 ## [v0.0.9](https://github.com/x-ryoppippi/setup-nix/compare/v0.0.8...v0.0.9) - 2026-11-27
 
 ### Changes
